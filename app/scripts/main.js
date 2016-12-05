@@ -9,29 +9,41 @@ window.Pnote = {
   init: function () {
     'use strict';
     console.log('Hello from Backbone!');
-  },
-  ex01: function (contact) {
-    'use strict';
-    console.log(JSON.stringify(contact, null, 2));
+
+    var noteCollection = new Pnote.Collections.Note([{
+      title: 'test1',
+      body: 'testbody'
+    }, {
+      title: 'test2',
+      body: 'tesbody'
+    }]);
+
+    noteCollection.each(function(note) {
+      note.save();
+    })
+
+    return noteCollection.models;
   }
 };
 
 $(document).ready(function () {
   'use strict';
-  Pnote.init();
-  var noteCollection = new Pnote.Collections.Note([{
-    title: 'test1',
-    body: 'testbody'
-  }, {
-    title: 'test2',
-    body: 'tesbody'
-  }]);
-  var noteListView = new Pnote.Views.NoteList({
-    collection: noteCollection
-  })
+  Pnote.noteCollection = new Pnote.Collections.Note();
 
-  var mainContainer = new Pnote.Views.Container({
+  Pnote.mainContainer = new Pnote.Views.Container({
     el: '#main-container'
+  });
+
+  Pnote.noteCollection.fetch().then(function(notes) {
+    if (notes.length === 0) {
+      var models = Pnote.init();
+      Practice.noteCollection.reset(models);
+    }
+
+    var noteListView = new Pnote.Views.NoteList({
+      collection: Pnote.noteCollection
+    });
+
+    Pnote.mainContainer.show(noteListView);
   })
-  mainContainer.show(noteListView);
 });

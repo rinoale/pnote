@@ -15,7 +15,9 @@ Pnote.Views = Pnote.Views || {};
 
     className: '',
 
-    events: {},
+    events: {
+      'click .js-delete': 'onClickDelete'
+    },
 
     initialize: function () {
       this.listenTo(this.model, 'change', this.render);
@@ -24,8 +26,11 @@ Pnote.Views = Pnote.Views || {};
     render: function () {
       this.$el.html(this.template(this.model.toJSON()));
       return this;
-    }
+    },
 
+    onClickDelete: function() {
+      this.model.destroy();
+    }
   });
 
 })();
