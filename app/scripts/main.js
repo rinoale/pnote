@@ -34,16 +34,17 @@ $(document).ready(function () {
     el: '#main-container'
   });
 
+  Pnote.headerContainer = new Pnote.Views.Container({
+    el: '#header-container'
+  });
+
   Pnote.noteCollection.fetch().then(function(notes) {
     if (notes.length === 0) {
       var models = Pnote.init();
-      Practice.noteCollection.reset(models);
+      Pnote.noteCollection.reset(models);
     }
 
-    var noteListView = new Pnote.Views.NoteList({
-      collection: Pnote.noteCollection
-    });
-
-    Pnote.mainContainer.show(noteListView);
+    Pnote.noteRouter = new Pnote.Routers.Note();
+    Backbone.history.start();
   })
 });
