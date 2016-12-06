@@ -36,7 +36,11 @@ Pnote.Routers = Pnote.Routers || {};
         var noteListView = new Pnote.Views.NoteList({
           collection: this.filteredCollection
         });
-        Pnote.mainContainer.show(noteListView);
+        var iconLoading = new Pnote.Views.IconLoading();
+        Pnote.mainContainer.show(iconLoading);
+        setTimeout(() => {
+          Pnote.mainContainer.show(noteListView);
+        }, 2000);
       }
 
       models = models || Pnote.noteCollection.models;
