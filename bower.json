@@ -6,7 +6,8 @@
     "jquery": "~2.1.0",
     "backbone": "~1.1.0",
     "lodash": "~2.4.1",
-    "backbone.localStorage": "^1.1.16"
+    "backbone.localStorage": "^1.1.16",
+    "font-awesome": "fontawesome#^4.7.0"
   },
   "devDependencies": {}
 }
