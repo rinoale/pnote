@@ -19,17 +19,23 @@ Pnote.Views = Pnote.Views || {};
 
     initialize: function (options) {
       this.collection = options.collection;
+      this.listenTo(this.collection, 'reset', this.render);
     },
 
     render: function () {
       this.$el.html(this.template);
-      this.collection.each(function(note) {
+      this.noteViews = this.collection.map(function(note) {
         var noteView = new Pnote.Views.Note({
           model: note
         });
         this.$('#noteList').append(noteView.render().$el);
+        return noteView;
       }, this);
       return this;
+    },
+
+    removeNoteViews: function() {
+      _.invoke(this.noteViews, 'remove');
     }
 
   });

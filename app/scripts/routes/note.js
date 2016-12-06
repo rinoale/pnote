@@ -9,6 +9,8 @@ Pnote.Routers = Pnote.Routers || {};
     routes: {
       'notes/:id': 'showNoteDetail',
       'new': 'showNewNote',
+      'notes/:id/edit': 'showEditNote',
+      'notes/search/:query': 'searchNote',
       '*actions': 'defaultRoute'
     },
 
@@ -25,13 +27,21 @@ Pnote.Routers = Pnote.Routers || {};
       Pnote.mainContainer.show(noteDetailView);
     },
 
-    showNoteList: function() {
-      var noteListView = new Pnote.Views.NoteList({
-        collection: Pnote.noteCollection
-      });
+    showNoteList: function(models) {
+      if (!this.filteredCollection) {
+        this.filteredCollection = new Pnote.Collections.Note();
+      }
 
-      Pnote.mainContainer.show(noteListView);
+      if (!Pnote.mainContainer.has(Pnote.Views.NoteList)) {
+        var noteListView = new Pnote.Views.NoteList({
+          collection: this.filteredCollection
+        });
+        Pnote.mainContainer.show(noteListView);
+      }
 
+      models = models || Pnote.noteCollection.models;
+
+      this.filteredCollection.reset(models);
       this.showNoteControl();
     },
 
@@ -45,6 +55,13 @@ Pnote.Routers = Pnote.Routers || {};
       })
 
       Pnote.headerContainer.show(noteControlView);
+    },
+
+    searchNote: function(query) {
+      var filtered = Pnote.noteCollection.filter(function(note) {
+        return note.get('title').indexOf(query) !== -1;
+      });
+      this.showNoteList(filtered);
     },
 
     showNewNote: function() {
@@ -63,6 +80,24 @@ Pnote.Routers = Pnote.Routers || {};
       Pnote.mainContainer.show(noteFormView);
 
       Pnote.headerContainer.empty();
+    },
+
+    showEditNote: function(id) {
+      var self = this;
+
+      var note = Pnote.noteCollection.get(id);
+      var noteFormView = new Pnote.Views.NoteForm({
+        model: note
+      });
+
+      noteFormView.on('submit:form', function(attrs) {
+        note.save(attrs);
+
+        self.showNoteDetail(note.get('id'));
+        self.navigate('notes/' + note.get('id'));
+      });
+
+      Pnote.mainContainer.show(noteFormView);
     }
   });
 

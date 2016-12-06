@@ -24,6 +24,10 @@ Pnote.Views = Pnote.Views || {};
     empty: function() {
       this.destroyView(this.currentView);
       this.currentView = null;
+    },
+
+    has: function(obj) {
+      return this.currentView instanceof obj;
     }
 
   });
