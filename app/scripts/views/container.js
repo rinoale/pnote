@@ -8,9 +8,16 @@ Pnote.Views = Pnote.Views || {};
   Pnote.Views.Container = Backbone.View.extend({
 
     show: function(view) {
+      var iconLoading = new Pnote.Views.IconLoading();
       this.destroyView(this.currentView);
-      this.$el.append(view.render().$el);
-      this.currentView = view;
+      this.$el.append(iconLoading.render().$el);
+      this.currentView = iconLoading;
+
+      setTimeout(() => {
+        this.destroyView(this.currentView);
+        this.$el.append(view.render().$el);
+        this.currentView = view;
+      }, 2000);
     },
 
     destroyView: function(view) {
